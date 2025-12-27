@@ -1,23 +1,6 @@
 <div class="tree-root">
   {{#each analyzis.tree}}
-  <div class="tree-branch">
-    <strong>{{this.word}}</strong>
-    {{#each this.detail}}
-      <em data-tooltip="{{this.description}}">{{this.type}}</em>
-    {{/each}}
-    {{#if this.children}}
-      <div>
-        {{#each this.children}}
-          <div class="tree-leaf">
-            <strong>{{this.word}}</strong>
-            {{#each this.detail}}
-              <em data-tooltip="{{this.description}}">{{this.type}}</em>
-            {{/each}}
-          </div>
-        {{/each}}
-      </div>
-    {{/if}}
-  </div>
+    {{>sentencePart part=.}}
   {{/each}}
 </div>
 <article>
@@ -27,5 +10,13 @@
     <p>{{analyzis.wordOrder}}</p>
     <p>{{analyzis.caseUsage}}</p>
     <p>{{analyzis.explanation}}</p>
+    <br />
+    <ul>
+      {{#each analyzis.references}}
+      <li>
+        <a href="{{this.ref}}">{{this.type}}</a>
+      </li>
+      {{/each}}
+    </ul>
   </details>
 </article>
