@@ -161,7 +161,7 @@ app.post('/save', async (req, res) => {
     analyzis: JSON.parse(req.body.analyzis)
   };
   if (full !== undefined && !db.data.sentences.some(s => s.sentence.german === full.sentence.german)) {
-    await db.update(({ sentences }) => sentences.push(full));
+    await db.update(({ sentences }) => sentences.unshift(full));
   }
   return res.sendStatus(200);
 });
