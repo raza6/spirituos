@@ -8,6 +8,7 @@
       <meta name="color-scheme" content="light dark">
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
       <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
+      <link rel="stylesheet" href="/style.css">
       <title>Spirituös</title>
   </head>
   <body>
@@ -15,4 +16,14 @@
       {{{body}}}
     </main>
   </body>
+  <script>
+    const saveButton =document.getElementById('save');
+    saveButton.addEventListener('click', () => {
+      saveButton.classList.add('bounce');
+
+      setTimeout(() => {
+        saveButton.classList.remove('bounce');
+      }, 1200);
+    });
+  </script>
 </html>

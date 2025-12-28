@@ -8,42 +8,18 @@ import { getRandomSentence } from './services/tatoebaConnector';
 import { analyzeSentence } from './services/satzklarConnector';
 import { AnalysisComponent } from './types/analyzis';
 import { FullVM } from './types/display';
-import { nextTick } from 'process';
 const app = express();
-const port = 3000;
+const port = 3012;
 
 let db: Low<{ sentences: FullVM[]}>;
-let lastSentence: FullVM;
 initDb();
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true }))
 
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
-
-Handlebars.registerPartial('sentencePart', 
-`
-  {{#noPunkt part.component}}
-    <div class="tree-branch">
-      <strong>
-        {{#soloWord part.word}}
-          <a class="deflink" href="https://en.wiktionary.org/wiki/{{uncapitalize part}}#German">{{part.word}}</a>
-        {{else}}
-          {{part.word}}
-        {{/soloWord}}
-      </strong>-
-      <em data-tooltip="{{part.description}}">{{part.component}}</em>
-      {{#sameChild part}}
-        <em data-tooltip="{{part.children.[0].description}}">{{part.children.[0].component}}</em>
-      {{else}}
-        {{#each part.children}}
-          {{>sentencePart part=.}}
-        {{/each}}
-      {{/sameChild}}
-    </div>
-  {{/noPunkt}}
-`);
 
 Handlebars.registerHelper('noPunkt', function (component: string, options) {
   if (component !== 'Interpunktion') {
@@ -82,6 +58,10 @@ Handlebars.registerHelper('urlEncoded', function(str: string): string {
   return encodeURI(str);
 });
 
+Handlebars.registerHelper('stringify', function(data: any): string {  
+  return JSON.stringify(data);
+});
+
 async function initDb() {
   const defaultData = { sentences: [] };
   db = await JSONFilePreset(path.join(__dirname, 'db.json'), defaultData);
@@ -91,7 +71,7 @@ app.get('/', async (req, res) => {
   try {
     const sentence = await getRandomSentence();
 
-    lastSentence = {
+    const currentFull = {
       sentence: {
         german: sentence.text,
         english: sentence.translations.filter(t => t.lang === 'eng')[0].text,
@@ -101,7 +81,7 @@ app.get('/', async (req, res) => {
     }
   
     res.render('home', { 
-      sentence: lastSentence.sentence,
+      sentence: currentFull.sentence,
       saveable: true,
       hasPrevious: false,
       hasNext: true,
@@ -151,18 +131,20 @@ app.get('/analyzis/:sentence', async (req, res) => {
       return self.findIndex(vv => vv.type === v.type) === i;
     });
 
-    lastSentence.analyzis = {
-      structure: analyzisCore.structure,
-      wordOrder: analyzisCore.wordOrder,
-      caseUsage: analyzisCore.caseUsage,
-      explanation: analyzisCore.pragmatics.explanation,
-      tree: analyzisTree.children,
-      references
+    const currentFull = {
+      analyzis: {
+        structure: analyzisCore.structure,
+        wordOrder: analyzisCore.wordOrder,
+        caseUsage: analyzisCore.caseUsage,
+        explanation: analyzisCore.pragmatics.explanation,
+        tree: analyzisTree.children,
+        references
+      }
     };
   
     res.render('analyzis', {
       layout: false,
-      analyzis: lastSentence.analyzis
+      analyzis: currentFull.analyzis
     });
   } catch {
     res.send("oops");
@@ -170,8 +152,12 @@ app.get('/analyzis/:sentence', async (req, res) => {
 });
 
 app.post('/save', async (req, res) => {
-  if (lastSentence !== undefined && !db.data.sentences.some(s => s.sentence.german === lastSentence.sentence.german)) {
-    await db.update(({ sentences }) => sentences.push(lastSentence));
+  const full = {
+    sentence: JSON.parse(req.body.sentence),
+    analyzis: JSON.parse(req.body.analyzis)
+  };
+  if (full !== undefined && !db.data.sentences.some(s => s.sentence.german === full.sentence.german)) {
+    await db.update(({ sentences }) => sentences.push(full));
   }
   return res.sendStatus(200);
 });

@@ -1,0 +1,23 @@
+<div class="tree-root">
+  {{#each analyzis.tree}}
+    {{>sentence_partial part=.}}
+  {{/each}}
+</div>
+<article>
+  <details name="remark">
+    <summary>Remark</summary>
+    <p>{{analyzis.structure}}</p>
+    <p>{{analyzis.wordOrder}}</p>
+    <p>{{analyzis.caseUsage}}</p>
+    <p>{{analyzis.explanation}}</p>
+    <br />
+    <ul>
+      {{#each analyzis.references}}
+      <li>
+        <a href="{{this.ref}}">{{this.type}}</a>
+      </li>
+      {{/each}}
+    </ul>
+  </details>
+</article>
+<input name="analyzis" id="analyzisHolder" value="{{ stringify analyzis }}" hidden/>

@@ -1,0 +1,103 @@
+.top-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 64px;
+}
+
+.sentence-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 56px;
+}
+
+.button-wrapper {
+  width: 80px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.button-wrapper a {
+  line-height: 0;
+  height: fit-content;
+}
+
+h1 a, .button-wrapper a {
+  text-decoration: none;
+  color: inherit;
+}
+
+article {
+  margin-top: var(--pico-block-spacing-vertical);
+}
+
+.tree-root {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.tree-branch {
+  border: 1px solid var(--pico-secondary-background);
+  padding: 8px;
+  margin: 8px 2px;
+  border-radius: 10px;
+  height: fit-content;
+}
+
+details {
+  margin-bottom: 0;
+}
+
+.icon {
+  padding: 4px;
+  line-height: 0;
+  height: fit-content;
+}
+
+.icon svg {
+  width: 20px;
+}
+
+[hidden] {
+  display: none;
+}
+
+@keyframes bounce {
+  from,
+  20%,
+  53%,
+  to {
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    transform: translate3d(0, 0, 0);
+  }
+
+  40%,
+  43% {
+    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    transform: translate3d(0, -15px, 0) scaleY(1.1);
+  }
+
+  70% {
+    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    transform: translate3d(0, -5px, 0) scaleY(1.05);
+  }
+
+  80% {
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    transform: translate3d(0, 0, 0) scaleY(0.95);
+  }
+
+  90% {
+    transform: translate3d(0, -1px, 0) scaleY(1.02);
+  }
+}
+
+.bounce {
+  animation-name: bounce;
+  transform-origin: center bottom;
+  animation-delay: 0s;
+  animation-duration: 1s;
+}

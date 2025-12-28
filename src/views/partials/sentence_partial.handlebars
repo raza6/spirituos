@@ -1,0 +1,19 @@
+{{#noPunkt part.component}}
+  <div class="tree-branch">
+    <strong>
+      {{#soloWord part.word}}
+        <a class="deflink" href="https://en.wiktionary.org/wiki/{{uncapitalize part}}#German">{{part.word}}</a>
+      {{else}}
+        {{part.word}}
+      {{/soloWord}}
+    </strong>-
+    <em data-tooltip="{{part.description}}">{{part.component}}</em>
+    {{#sameChild part}}
+      <em data-tooltip="{{part.children.[0].description}}">{{part.children.[0].component}}</em>
+    {{else}}
+      {{#each part.children}}
+        {{>sentence_partial part=.}}
+      {{/each}}
+    {{/sameChild}}
+  </div>
+{{/noPunkt}}
