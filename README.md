@@ -1,7 +1,7 @@
 
 # Spirituös
 
-Minimalist German sentence learning tool with pronounciation, syntactical analysis and save feature.
+Minimalist German sentence learning tool with pronunciation, syntactical analysis and save feature.
 
 ## Run Locally
 
